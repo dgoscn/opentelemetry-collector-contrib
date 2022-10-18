@@ -38,6 +38,7 @@ type Config struct {
 	//Labels map[string]string `mapstructure:"labels,omitempty"`
 }
 
+// This struct represents the Pure Storage Flash Array
 type Array struct {
 	Address string `mapstructure:"Address"`
 	Token   string `mapstructure:"Token"`
@@ -47,8 +48,8 @@ type Settings struct {
 
 	//CollectionInterval time.Duration `mapstructure:"collection_interval"`
 
-	MetricsWCollectionInterval time.Duration `mapstructure:"MetricsWCollectionInterval"`
-	MetricsXCollectionInterval time.Duration `mapstructure:"MetricsXCollectionInterval"`
-	MetricsYCollectionInterval time.Duration `mapstructure:"MetricsYCollectionInterval"`
-	MetricsZCollectionInterval time.Duration `mapstructure:"MetricsZCollectionInterval"`
+	MetricsArrayCollectionInterval  time.Duration `mapstructure:"MetricsArrayCollectionInterval"`
+	MetricsHostCollectionInterval   time.Duration `mapstructure:"MetricsHostCollectionInterval"`
+	MetricsVolumeCollectionInterval time.Duration `mapstructure:"MetricsVolumeCollectionInterval"`
+	MetricsPodCollectionInterval    time.Duration `mapstructure:"MetricsPodCollectionInterval"`
 }

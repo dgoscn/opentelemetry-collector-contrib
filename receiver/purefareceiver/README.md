@@ -25,12 +25,15 @@ Example:
 ```yaml
 receivers:
   purefa:
-    confighttp.Client
+    endpoint:
     arrays:
       address:
       token:
     settings:
-      metrics_x_collection_interval:
+      metrics_array_collection_interval:
+      metrics_host_collection_interval:
+      metrics_volume_collection_interval:
+      metrics_pod_collection_interval:
 ```
 
 The full list of settings exposed for this receiver are documented [here](./config.go)
