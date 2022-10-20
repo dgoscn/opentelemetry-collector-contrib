@@ -24,9 +24,9 @@ type Config struct {
 	scraperhelper.ScraperControllerSettings `mapstructure:",squash"`
 
 	// Configure the service URL for the purefa service.
-	Endpoint string `mapstructure:"endpoint"`
-	Arrays   []*Array
-	Settings *Settings
+	Endpoint string    `mapstructure:"endpoint"`
+	Arrays   []*Array  `mapstructure:"array"`
+	Settings *Settings `mapstructure:"settings"`
 
 	// Metrics allows customizing scraped metrics representation.
 	//Metrics metadata.MetricsSettings `mapstructure:"metrics"`
