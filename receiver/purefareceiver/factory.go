@@ -16,6 +16,7 @@ package purefareceiver // import "github.com/open-telemetry/opentelemetry-collec
 
 import (
 	"context"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
@@ -25,9 +26,18 @@ import (
 )
 
 const (
-	typeStr         = "purefa"
-	stability       = component.StabilityInDevelopment
+	// Key to invoke this receiver
+	typeStr = "purefa"
+
+	// Stability level of the receiver
+
+	stability = component.StabilityInDevelopment
+
+	// This variable represents the uri connect
 	defaultEndpoint = "localhost:13131"
+
+	// Default collection interval. Every 120s the receiver will collect metrics from Amazon ECS Task Metadata Endpoint
+	defaultCollectionInterval = 120 * time.Second
 )
 
 // NewFactory creates a factory for purefa receiver.
