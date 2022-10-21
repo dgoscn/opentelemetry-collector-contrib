@@ -33,7 +33,8 @@ receivers:
       metrics_array_collection_interval:
       metrics_host_collection_interval:
       metrics_volume_collection_interval:
-      metrics_pod_collection_interval:
+      metrics_pods_collection_interval:
+      metrics_directories_collection_interval:
 ```
 
 The full list of settings exposed for this receiver are documented [here](./config.go)

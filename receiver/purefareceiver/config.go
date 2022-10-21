@@ -48,8 +48,9 @@ type Settings struct {
 
 	//CollectionInterval time.Duration `mapstructure:"collection_interval"`
 
-	MetricsArrayCollectionInterval  time.Duration `mapstructure:"MetricsArrayCollectionInterval"`
-	MetricsHostCollectionInterval   time.Duration `mapstructure:"MetricsHostCollectionInterval"`
-	MetricsVolumeCollectionInterval time.Duration `mapstructure:"MetricsVolumeCollectionInterval"`
-	MetricsPodCollectionInterval    time.Duration `mapstructure:"MetricsPodCollectionInterval"`
+	MetricsArrayCollectionInterval       time.Duration `mapstructure:"MetricsArrayCollectionInterval"`
+	MetricsHostCollectionInterval        time.Duration `mapstructure:"MetricsHostCollectionInterval"`
+	MetricsVolumeCollectionInterval      time.Duration `mapstructure:"MetricsVolumeCollectionInterval"`
+	MetricsPodsCollectionInterval        time.Duration `mapstructure:"MetricsPodsCollectionInterval"`
+	MetricsDirectoriesCollectionInterval time.Duration `mapstructure:"MetricsDirectoriesCollectionInterval"`
 }
