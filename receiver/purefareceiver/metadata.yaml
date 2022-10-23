@@ -1,0 +1,551 @@
+name: purefareceiver
+
+# Optional: OTel Semantic Conventions version that will be associated with the scraped metrics.
+# This attribute should be set for metrics compliant with OTel Semantic Conventions.
+# sem_conv_version: 1.9.0
+
+#Labels from metrics
+#[dimension="", name="", space="", component_name="", component_type="", host="", hostgroup="", volume="", naa_id="",pod="", volume_group=""
+
+# Optional: map of resource attribute definitions with the key being the attribute name.
+resource_attributes:
+  <attribute.name>:
+    # Required: description of the attribute.
+    description:
+    # Required: attribute type.
+    type: <string|int|double|bool|bytes>
+
+# Optional: map of attribute definitions with the key being the attribute name and value
+# being described below.
+attributes:
+  #<attribute.name>:
+  dimension:
+    # Optional: if the attribute name as described by the key is not the actual attribute
+    # value to be reported that value can be overridden here.
+    value:
+    # Required: description of the attribute.
+    description:
+    # Optional: array of attribute values if they are static values.
+    enum:
+    # Optional: attribute type. Default: string.
+    type: <string|int|double|bool|bytes>
+  name:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>
+  space:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>
+  host:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>
+  component_type:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>
+  volume:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>
+  hostgroup:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>                
+  naa_id:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>   
+  pod:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>   
+  volume_group:
+    value:
+    description:
+    enum:
+    type: <string|int|double|bool|bytes>           
+
+# Required: map of metric names with the key being the metric name and value
+# being described below.
+
+## ARRAY
+metrics:
+  purefa_array_performance_average_bytes:
+    # Required: whether the metric is collected by default.
+    enabled: # true | false
+    # Required: metric description.
+    description: FlashArray array average operations size
+    # Optional: extended documentation of the metric.
+    extended_documentation:
+    # Required: metric unit as defined by https://ucum.org/ucum.html.
+    unit:
+    # Required: metric type with its settings.
+    gauge:
+      # Required for sum and gauge metrics: type of number data point values.
+      value_type: # int | double
+      # Required for sum metric: whether the metric is monotonic (no negative delta values).
+      monotonic: # true | false
+      # Required for sum metric: whether reported values incorporate previous measurements
+      # (cumulative) or not (delta).
+      aggregation: # delta | cumulative
+    # Optional: array of attributes that were defined in the attributes section that are emitted by this metric.
+    attributes:
+  purefa_array_performance_bandwidth_bytes:
+    enabled: 
+    description: FlashArray array throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+# HELP purefa_array_performance_latency_usec FlashArray array latency
+# TYPE purefa_array_performance_latency_usec gauge
+purefa_array_performance_latency_usec:
+    enabled: 
+    description: FlashArray array latency
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation:
+    attributes:    
+# HELP purefa_array_performance_queue_depth_ops 
+# TYPE purefa_array_performance_queue_depth_ops gauge
+#purefa_array_performance_queue_depth_ops 0
+purefa_array_performance_queue_depth_ops:
+    enabled: 
+    description: FlashArray array queue depth size
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_array_performance_throughput_iops 
+# TYPE purefa_array_performance_throughput_iops gauge
+purefa_array_performance_throughput_iops:
+    enabled: 
+    description: FlashArray array throughput
+    extended_documentation:
+    unit:
+    gauge:    
+      value_type:
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_array_space_bytes 
+# TYPE purefa_array_space_bytes gauge
+purefa_array_space_bytes: 
+    enabled: 
+    description: FlashArray array space in bytes
+    extended_documentation:
+    unit: 
+    gauge:
+      value_type:
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_array_space_data_reduction_ratio 
+# TYPE purefa_array_space_data_reduction_ratio gauge
+purefa_array_space_data_reduction_ratio:  
+    enabled:    
+    description: FlashArray array space data reduction
+    extended_documentation:
+    unit:
+    gauge:
+      value_type:
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_array_space_utilization 
+# TYPE purefa_array_space_utilization gauge
+#purefa_array_space_utilization 0.022310346834307968
+purefa_array_space_utilization:
+    enabled:  
+    description: FlashArray array space utilization in percent
+    extended_documentation:
+    unit:
+    gauge:
+      value_type:
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_hw_component_status 
+# TYPE purefa_hw_component_status gauge
+purefa_hw_component_status: 
+    enabled: 
+    description: FlashArray hardware component status
+    extended_documentation:  
+    unit:  
+    gauge:  
+      value_type:
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_hw_component_temperature_celsius 
+# TYPE purefa_hw_component_temperature_celsius gauge
+purefa_hw_component_temperature_celsius:
+    enabled: 
+    description: FlashArray hardware component temperature
+    extended_documentation:
+    unit:
+    gauge:
+      value_type:
+      monotonic: 
+      aggregation:
+    attributes:
+# HELP purefa_hw_component_voltage_volt 
+# TYPE purefa_hw_component_voltage_volt gauge
+purefa_hw_component_voltage_volt:
+    enabled:
+    description: FlashArray hardware component voltage
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+##DIRECTORIES
+# HELP purefa_directory_performance_average_bytes 
+# TYPE purefa_directory_performance_average_bytes gauge
+purefa_directory_performance_average_bytes:
+    enabled:
+    description: FlashArray directory average operations size
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_directory_performance_bandwidth_bytes 
+# TYPE purefa_directory_performance_bandwidth_bytes gauge
+purefa_directory_performance_bandwidth_bytes:
+    enabled:
+    description: FlashArray directory throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_directory_performance_latency_usec 
+# TYPE purefa_directory_performance_latency_usec gauge
+purefa_directory_performance_latency_usec:
+    enabled:
+    description: FlashArray directory latency
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_directory_performance_throughput_iops 
+# TYPE purefa_directory_performance_throughput_iops gauge
+purefa_directory_performance_throughput_iops:
+    enabled:
+    description: FlashArray directory throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_directory_space_bytes 
+# TYPE purefa_directory_space_bytes gauge
+purefa_directory_space_bytes:
+    enabled:
+    description: FlashArray directory space in bytes
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_directory_space_data_reduction_ratio 
+# TYPE purefa_directory_space_data_reduction_ratio gauge
+purefa_directory_space_data_reduction_ratio:
+    enabled:
+    description: FlashArray directory space data reduction
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+##HOSTS
+# HELP purefa_host_connections_info 
+# TYPE purefa_host_connections_info gauge
+purefa_host_connections_info:
+    enabled:
+    description: FlashArray host volumes connections
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes: []
+
+# HELP purefa_host_performance_average_bytes 
+# TYPE purefa_host_performance_average_bytes gauge
+purefa_host_performance_average_bytes:
+    enabled:
+    description: FlashArray host average operations size
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_host_performance_bandwidth_bytes 
+# TYPE purefa_host_performance_bandwidth_bytes gauge
+purefa_host_performance_bandwidth_bytes:
+    enabled:
+    description: FlashArray host throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_host_performance_latency_usec 
+# TYPE purefa_host_performance_latency_usec gauge
+purefa_host_performance_latency_usec:
+    enabled:
+    description: FlashArray host latency
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_host_performance_throughput_iops 
+# TYPE purefa_host_performance_throughput_iops gauge
+purefa_host_performance_throughput_iops:
+    enabled:
+    description:
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_host_space_bytes 
+# TYPE purefa_host_space_bytes gauge
+purefa_host_space_bytes:
+    enabled:
+    description: FlashArray host space in bytes
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_host_space_data_reduction_ratio 
+# TYPE purefa_host_space_data_reduction_ratio gauge
+purefa_host_space_data_reduction_ratio:
+    enabled:
+    description: FlashArray host space data reduction
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+##PODS
+
+# HELP purefa_pod_performance_average_bytes 
+# TYPE purefa_pod_performance_average_bytes gauge
+purefa_pod_performance_average_bytes:
+    enabled:
+    description: FlashArray pod average operations size
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_pod_performance_bandwidth_bytes 
+# TYPE purefa_pod_performance_bandwidth_bytes gauge
+purefa_pod_performance_bandwidth_bytes:
+    enabled:
+    description: FlashArray pod throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_pod_performance_latency_usec 
+# TYPE purefa_pod_performance_latency_usec gauge
+purefa_pod_performance_latency_usec:
+    enabled:
+    description: FlashArray pod latency
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_pod_performance_throughput_iops 
+# TYPE purefa_pod_performance_throughput_iops gauge
+purefa_pod_performance_throughput_iops:
+    enabled:
+    description: FlashArray pod throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_pod_space_bytes 
+# TYPE purefa_pod_space_bytes gauge
+purefa_pod_space_bytes:
+    enabled:
+    description: FlashArray pod space in bytes
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_pod_space_data_reduction_ratio 
+# TYPE purefa_pod_space_data_reduction_ratio gauge
+purefa_pod_space_data_reduction_ratio:
+    enabled:
+    description: FlashArray pod space data reduction
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_volume_performance_average_bytes 
+# TYPE purefa_volume_performance_average_bytes gauge
+purefa_volume_performance_average_bytes:
+    enabled:
+    description: FlashArray volume average operations size
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_volume_performance_bandwidth_bytes 
+# TYPE purefa_volume_performance_bandwidth_bytes gauge
+purefa_volume_performance_bandwidth_bytes:
+    enabled:
+    description: FlashArray volume throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_volume_performance_latency_usec 
+# TYPE purefa_volume_performance_latency_usec gauge
+purefa_volume_performance_latency_usec:
+    enabled:
+    description: FlashArray volume latency
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_volume_performance_throughput_iops 
+# TYPE purefa_volume_performance_throughput_iops gauge
+purefa_volume_performance_throughput_iops:
+    enabled:
+    description: FlashArray volume throughput
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_volume_space_bytes 
+# TYPE purefa_volume_space_bytes gauge
+purefa_volume_space_bytes:
+    enabled:
+    description: FlashArray volume space in bytes
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
+
+# HELP purefa_volume_space_data_reduction_ratio 
+# TYPE purefa_volume_space_data_reduction_ratio gauge
+purefa_volume_space_data_reduction_ratio:
+    enabled:
+    description: FlashArray volume space data reduction
+    extended_documentation:
+    unit:
+    gauge:
+      value_type: 
+      monotonic: 
+      aggregation: 
+    attributes:
