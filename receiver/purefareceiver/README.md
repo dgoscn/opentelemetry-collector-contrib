@@ -1,4 +1,4 @@
-# Pure Storage Flash Array Receiver
+# Pure Storage FlashArray Receiver
 
 | Status                   |                     |
 | ------------------------ |---------------------|
@@ -6,7 +6,7 @@
 | Supported pipeline types | metrics             |
 | Distributions            | [contrib]           |
 
-The Pure Storage Flash Array receiver, receives metrics from Pure Storage internal services hosts.
+The Pure Storage FlashArray receiver, receives metrics from Pure Storage internal services hosts.
 
 Supported pipeline types: metrics
 

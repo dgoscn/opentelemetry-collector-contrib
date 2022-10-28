@@ -25,7 +25,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/metadata"
 )
 
-type receiver struct {
+type purefaReceiver struct {
 	cfg    *Config
 	client *internal.PurefaClient
 
@@ -34,16 +34,20 @@ type receiver struct {
 }
 
 func newPureFlashArrayReceiver(settings component.ReceiverCreateSettings, cfg *Config) *receiver {
-	return &receiver{
+	return &purefaReceiver{
 		cfg:    cfg,
 		client: client,
 	}
 }
 
-func newPureFlashArrayScraper(recv *receiver) (scraperhelper.Scraper, error) {
+func newPureFlashArrayScraper(recv *purefaReceiver) (scraperhelper.Scraper, error) {
 	return scraperhelper.NewScraper(typeStr, recv.scrape, scraperhelper.WithShutdown(recv.shutdown))
 }
 
-func (s *receiver) shutdown(context.Context) error {
+func (tailtracerRcvr *purefaReceiver) Start(ctx context.Context, host component.Host) error {
+	return nil
+}
+
+func (s *purefaReceiver) shutdown(context.Context) error {
 	return s.client.Shutdown()
 }

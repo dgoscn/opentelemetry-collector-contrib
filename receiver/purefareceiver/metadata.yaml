@@ -30,7 +30,7 @@ attributes:
     # Optional: attribute type. Default: string.
     type: string
   name:
-    description: The name of Flash Array label
+    description: The name of FlashArray label
     type: string
   space:
     description: Represents the local where the metric are stored
@@ -51,10 +51,10 @@ attributes:
     description: The group that the hosts belongs to
     type: string            
   naa_id:
-    description: Represents a HEX number of the flash array 
+    description: Represents globally unique identifier for a specific LUN in FlashArray 
     type: string  
   pod:
-    description: Show the pod name containing the metric scraped
+    description: It is a group of volumes that can be replicated across multiple arrays for replication
     type: string 
   volume_group:
     description: Literally the group that the volume belongs

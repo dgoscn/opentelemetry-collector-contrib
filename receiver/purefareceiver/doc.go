@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// OpenTelemetry collector to receive data in the Pure Storage Flash Array supported formats.
+// OpenTelemetry collector to receive data in the Pure Storage FlashArray supported formats.
 
 //go:generate mdatagen metadata.yaml
 

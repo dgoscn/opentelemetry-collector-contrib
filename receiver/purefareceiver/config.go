@@ -38,7 +38,7 @@ type Config struct {
 	//Labels map[string]string `mapstructure:"labels,omitempty"`
 }
 
-// This struct represents the Pure Storage Flash Array
+// This struct represents the Pure Storage FlashArray
 type Array struct {
 	Address string `mapstructure:"Address"`
 	Token   string `mapstructure:"Token"`
