@@ -16,7 +16,7 @@ package purefareceiver // import "github.com/open-telemetry/opentelemetry-collec
 
 import (
 	"context"
-	"time"
+	"errors"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/receiver/scraperhelper"
@@ -25,14 +25,19 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/metadata"
 )
 
+var (
+	errEmptyEndpoint = errors.New("empty endpoint")
+)
+
 type purefaReceiver struct {
 	cfg    *Config
 	client *internal.PurefaClient
 
-	lastRun time.Time
-	mb      *metadata.MetricsBuilder
+	array
+	mb *metadata.MetricsBuilder
 }
 
+// New creates the Pure FlashArray receiver with the given configuration.
 func newPureFlashArrayReceiver(settings component.ReceiverCreateSettings, cfg *Config) *receiver {
 	return &purefaReceiver{
 		cfg:    cfg,
@@ -44,10 +49,12 @@ func newPureFlashArrayScraper(recv *purefaReceiver) (scraperhelper.Scraper, erro
 	return scraperhelper.NewScraper(typeStr, recv.scrape, scraperhelper.WithShutdown(recv.shutdown))
 }
 
+// Start begins collecting metrics from endpoint.
 func (tailtracerRcvr *purefaReceiver) Start(ctx context.Context, host component.Host) error {
 	return nil
 }
 
 func (s *purefaReceiver) shutdown(context.Context) error {
+	//s.cancel()
 	return s.client.Shutdown()
 }
