@@ -16,11 +16,13 @@ package purefareceiver // import "github.com/open-telemetry/opentelemetry-collec
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/config/confignet"
+	"go.opentelemetry.io/collector/config/configtls"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver/scraperhelper"
 )
@@ -80,4 +82,39 @@ func createMetricsReceiver(
 		&cfg.ScraperControllerSettings, params, consumer,
 		scraperhelper.AddScraper(scraper),
 	)
+}
+
+func createDefaultConfig() config.Receiver {
+	scs := scraperhelper.NewDefaultScraperControllerSettings(typeStr)
+	scs.CollectionInterval = 10 * time.Second
+	return &Config{
+		TCPAddr: confignet.TCPAddr{
+			Endpoint: defaultEndpoint,
+		},
+		TLSClientSetting: configtls.TLSClientSetting{
+			Insecure: true,
+		},
+		ScraperControllerSettings: scs,
+		Metrics:                   metadata.DefaultMetricsSettings(),
+	}
+}
+
+var errConfigNotSAPHANA = errors.New("config was not an sap hana receiver config")
+
+func createMetricsReceiver(
+	ctx context.Context,
+	set component.ReceiverCreateSettings,
+	cfg config.Receiver,
+	consumer consumer.Metrics,
+) (component.MetricsReceiver, error) {
+	c, ok := cfg.(*Config)
+	if !ok {
+		return nil, errConfigNotSAPHANA
+	}
+	scraper, err := newSapHanaScraper(set, c, &defaultConnectionFactory{})
+	if err != nil {
+		return nil, err
+	}
+
+	return scraperhelper.NewScraperControllerReceiver(&c.ScraperControllerSettings, set, consumer, scraperhelper.AddScraper(scraper))
 }

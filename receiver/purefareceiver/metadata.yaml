@@ -8,7 +8,8 @@ name: purefareceiver
 #[dimension="", name="", space="", component_name="", component_type="", host="", hostgroup="", volume="", naa_id="",pod="", volume_group=""
 
 # Optional: map of resource attribute definitions with the key being the attribute name.
-#resource_attributes:
+resource_attributes:
+# registers or recursos
 #  <attribute.name>:
 #    # Required: description of the attribute.
 #    description:
