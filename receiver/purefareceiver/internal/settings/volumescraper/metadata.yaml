@@ -1,0 +1,105 @@
+name: purefareceiver/volume
+
+# Optional: OTel Semantic Conventions version that will be associated with the scraped metrics.
+# This attribute should be set for metrics compliant with OTel Semantic Conventions.
+# sem_conv_version: 1.9.0
+
+resource_attributes:
+attributes:
+  dimension: 
+    description: Dimension of the metric
+    type: string
+  name:
+    description: The name of FlashArray label
+    type: string
+  space:
+    description: Represents the local where the metric are stored
+    type: string
+  volume:
+    description: The volume where the metrics recorded by the containing label is in
+    type: string           
+  naa_id:
+    description: Represents globally unique identifier for a specific LUN in FlashArray 
+    type: string  
+  pod:
+    description: It is a group of volumes that can be replicated across multiple arrays for replication
+    type: string 
+  volume_group:
+    description: Literally the group that the volume belongs
+    type: string         
+
+# Required: map of metric names with the key being the metric name and value
+# being described below.
+
+metrics:
+# HELP purefa_volume_performance_average_bytes 
+# TYPE purefa_volume_performance_average_bytes gauge
+purefa_volume_performance_average_bytes:
+    enabled:
+    description: FlashArray volume average operations size
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [dimension, naa_id, name]
+
+# HELP purefa_volume_performance_bandwidth_bytes 
+# TYPE purefa_volume_performance_bandwidth_bytes gauge
+purefa_volume_performance_bandwidth_bytes:
+    enabled:
+    description: FlashArray volume throughput
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [dimension, naa_id, name]
+
+# HELP purefa_volume_performance_latency_usec 
+# TYPE purefa_volume_performance_latency_usec gauge
+purefa_volume_performance_latency_usec:
+    enabled:
+    description: FlashArray volume latency
+    unit: microsecond
+    gauge:
+      value_type: int 
+      monotonic: false
+      aggregation: cumulative
+    attributes: [dimension, naa_id, name]
+
+# HELP purefa_volume_performance_throughput_iops 
+# TYPE purefa_volume_performance_throughput_iops gauge
+purefa_volume_performance_throughput_iops:
+    enabled:
+    description: FlashArray volume throughput
+    unit: operation
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [dimension, naa_id, name]
+
+# HELP purefa_volume_space_bytes 
+# TYPE purefa_volume_space_bytes gauge
+purefa_volume_space_bytes:
+    enabled:
+    description: FlashArray volume space in bytes
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [naa_id, name, pod, space, volume_group]
+
+# HELP purefa_volume_space_data_reduction_ratio 
+# TYPE purefa_volume_space_data_reduction_ratio gauge
+purefa_volume_space_data_reduction_ratio:
+    enabled:
+    description: FlashArray volume space data reduction
+    unit:
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [naa_id, name, pod, volume_group]

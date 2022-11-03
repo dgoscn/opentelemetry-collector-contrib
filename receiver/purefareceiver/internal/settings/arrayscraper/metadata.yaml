@@ -1,0 +1,136 @@
+name: purefareceiver/array
+
+#sem_conv_version: 1.9.0
+
+# registers or recursos
+#  <attribute.name>:
+#    # Required: description of the attribute.
+#    description:
+#    # Required: attribute type.
+#    type: <string|int|double|bool|bytes>
+
+# Optional: map of attribute definitions with the key being the attribute name and value
+# being described below.
+attributes:
+  #<attribute.name>:
+  dimension: 
+    # Optional: if the attribute name as described by the key is not the actual attribute
+    # value to be reported that value can be overridden here.
+    # value: 
+    # Required: description of the attribute.
+    description: Dimension of the metric
+    # Optional: array of attribute values if they are static values.
+    # enum:
+    # Optional: attribute type. Default: string.
+    type: string
+  space:
+    description: Represents the local where the metric are stored
+    type: string
+  component_name:
+    description: The name of the component metric
+    type: string
+  component_type:
+    description: The type of the component metric
+    type: string
+metrics:
+  purefa_array_performance_average_bytes:
+    # Required: whether the metric is collected by default.
+    enabled: # true | false
+    # Required: metric description.
+    description: FlashArray array average operations size
+    # Optional: extended documentation of the metric.
+    # extended_documentation:
+    # Required: metric unit as defined by https://ucum.org/ucum.html.
+    unit: byte
+    # Required: metric type with its settings.
+    gauge:
+      # Required for sum and gauge metrics: type of number data point values.
+      value_type: int # int | double
+      # Required for sum metric: whether the metric is monotonic (no negative delta values).
+      monotonic: true
+      # Required for sum metric: whether reported values incorporate previous measurements
+      # (cumulative) or not (delta).
+      aggregation: cumulative # delta | cumulative
+    # Optional: array of attributes that were defined in the attributes section that are emitted by this metric.
+    attributes: dimension
+
+  purefa_array_performance_bandwidth_bytes:
+    enabled: 
+    description: FlashArray array throughput  
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: dimension
+
+# HELP purefa_array_performance_latency_usec FlashArray array latency
+# TYPE purefa_array_performance_latency_usec gauge
+  purefa_array_performance_latency_usec:
+    enabled: 
+    description: FlashArray array latency
+    unit: microsecond
+    gauge:
+      value_type: int 
+      monotonic: false
+      aggregation: cumulative
+    attributes: dimension 
+
+# HELP purefa_array_performance_throughput_iops 
+# TYPE purefa_array_performance_throughput_iops gauge
+  purefa_array_performance_throughput_iops:
+    enabled: 
+    description: FlashArray array throughput
+    unit: operation
+    gauge:    
+      value_type: int
+      monotonic: true
+      aggregation: cumulative
+    attributes: dimension
+
+# HELP purefa_array_space_bytes 
+# TYPE purefa_array_space_bytes gauge
+  purefa_array_space_bytes: 
+    enabled: 
+    description: FlashArray array space in bytes
+    unit: byte
+    gauge:
+      value_type: int
+      monotonic: true
+      aggregation: cumulative
+    attributes: space
+
+# HELP purefa_array_space_data_reduction_ratio 
+# TYPE purefa_array_space_data_reduction_ratio gauge
+  purefa_array_space_data_reduction_ratio:  
+    enabled:    
+    description: FlashArray array space data reduction
+    unit:
+    gauge:
+      value_type: int
+      monotonic: true
+      aggregation: cumulative
+
+# HELP purefa_hw_component_temperature_celsius 
+# TYPE purefa_hw_component_temperature_celsius gauge
+  purefa_hw_component_temperature_celsius:
+    enabled: 
+    description: FlashArray hardware component temperature
+    unit: degree celsius
+    gauge:
+      value_type: int
+      monotonic: true
+      aggregation: cumulative
+    attributes: [component_name, component_type]
+
+# HELP purefa_hw_component_voltage_volt 
+# TYPE purefa_hw_component_voltage_volt gauge
+  purefa_hw_component_voltage_volt:
+    enabled:
+    description: FlashArray hardware component voltage
+    unit: volt
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [component_name, component_type]

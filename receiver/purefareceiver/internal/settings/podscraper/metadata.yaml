@@ -1,0 +1,96 @@
+name: purefareceiver/pod
+
+# Optional: OTel Semantic Conventions version that will be associated with the scraped metrics.
+# This attribute should be set for metrics compliant with OTel Semantic Conventions.
+# sem_conv_version: 1.9.0
+
+resource_attributes:
+attributes:
+  dimension: 
+    description: Dimension of the metric
+    type: string
+  name:
+    description: The name of FlashArray label
+    type: string
+  space:
+    description: Represents the local where the metric are stored
+    type: string
+  host:
+    description: Literally the host that represent where the metrics status is in
+    type: string 
+  pod:
+    description: It is a group of volumes that can be replicated across multiple arrays for replication
+    type: string        
+
+metrics:
+# HELP purefa_pod_performance_average_bytes 
+# TYPE purefa_pod_performance_average_bytes gauge
+purefa_pod_performance_average_bytes:
+    enabled:
+    description: FlashArray pod average operations size
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [dimension, name]
+
+# HELP purefa_pod_performance_bandwidth_bytes 
+# TYPE purefa_pod_performance_bandwidth_bytes gauge
+purefa_pod_performance_bandwidth_bytes:
+    enabled:
+    description: FlashArray pod throughput
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [dimension, name]
+
+# HELP purefa_pod_performance_latency_usec 
+# TYPE purefa_pod_performance_latency_usec gauge
+purefa_pod_performance_latency_usec:
+    enabled:
+    description: FlashArray pod latency
+    unit: microsecond
+    gauge:
+      value_type: int 
+      monotonic: false
+      aggregation: cumulative
+    attributes: [dimension, name]
+
+# HELP purefa_pod_performance_throughput_iops 
+# TYPE purefa_pod_performance_throughput_iops gauge
+purefa_pod_performance_throughput_iops:
+    enabled:
+    description: FlashArray pod throughput
+    unit: operation
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [dimension, name]
+
+# HELP purefa_pod_space_bytes 
+# TYPE purefa_pod_space_bytes gauge
+purefa_pod_space_bytes:
+    enabled:
+    description: FlashArray pod space in bytes
+    unit: byte
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: [name, space]
+
+# HELP purefa_pod_space_data_reduction_ratio 
+# TYPE purefa_pod_space_data_reduction_ratio gauge
+purefa_pod_space_data_reduction_ratio:
+    enabled:
+    description: FlashArray pod space data reduction
+    unit:
+    gauge:
+      value_type: int 
+      monotonic: true
+      aggregation: cumulative
+    attributes: name
