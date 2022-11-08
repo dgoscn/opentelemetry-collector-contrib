@@ -33,9 +33,9 @@ attributes:
     description: The type of the component metric
     type: string
 metrics:
-  purefa_array_performance_average_bytes:
+  purefa.array.performance.average.bytes:
     # Required: whether the metric is collected by default.
-    enabled: # true | false
+    enabled: true # | false
     # Required: metric description.
     description: FlashArray array average operations size
     # Optional: extended documentation of the metric.
@@ -54,8 +54,8 @@ metrics:
     # Optional: array of attributes that were defined in the attributes section that are emitted by this metric.
     attributes: dimension
 
-  purefa_array_performance_bandwidth_bytes:
-    enabled: 
+  purefa.array.performance.bandwidth.bytes:
+    enabled: true
     description: FlashArray array throughput  
     unit: byte
     gauge:
@@ -66,8 +66,8 @@ metrics:
 
 # HELP purefa_array_performance_latency_usec FlashArray array latency
 # TYPE purefa_array_performance_latency_usec gauge
-  purefa_array_performance_latency_usec:
-    enabled: 
+  purefa.array.performance.latency.usec:
+    enabled:  true
     description: FlashArray array latency
     unit: microsecond
     gauge:
@@ -78,8 +78,8 @@ metrics:
 
 # HELP purefa_array_performance_throughput_iops 
 # TYPE purefa_array_performance_throughput_iops gauge
-  purefa_array_performance_throughput_iops:
-    enabled: 
+  purefa.array.performance.throughput.iops:
+    enabled: true
     description: FlashArray array throughput
     unit: operation
     gauge:    
@@ -90,8 +90,8 @@ metrics:
 
 # HELP purefa_array_space_bytes 
 # TYPE purefa_array_space_bytes gauge
-  purefa_array_space_bytes: 
-    enabled: 
+  purefa.array.space.bytes: 
+    enabled: true
     description: FlashArray array space in bytes
     unit: byte
     gauge:
@@ -102,8 +102,8 @@ metrics:
 
 # HELP purefa_array_space_data_reduction_ratio 
 # TYPE purefa_array_space_data_reduction_ratio gauge
-  purefa_array_space_data_reduction_ratio:  
-    enabled:    
+  purefa.array.space.data.reduction.ratio:  
+    enabled: true   
     description: FlashArray array space data reduction
     unit:
     gauge:
@@ -113,8 +113,8 @@ metrics:
 
 # HELP purefa_hw_component_temperature_celsius 
 # TYPE purefa_hw_component_temperature_celsius gauge
-  purefa_hw_component_temperature_celsius:
-    enabled: 
+  purefa.hw.component.temperature.celsius:
+    enabled: true
     description: FlashArray hardware component temperature
     unit: degree celsius
     gauge:
@@ -125,8 +125,8 @@ metrics:
 
 # HELP purefa_hw_component_voltage_volt 
 # TYPE purefa_hw_component_voltage_volt gauge
-  purefa_hw_component_voltage_volt:
-    enabled:
+  purefa.hw.component.voltage.volt:
+    enabled: true
     description: FlashArray hardware component voltage
     unit: volt
     gauge:
