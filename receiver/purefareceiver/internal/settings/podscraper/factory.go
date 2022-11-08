@@ -21,14 +21,14 @@ import (
 	"go.opentelemetry.io/collector/receiver/scraperhelper"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/podscraper/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/arrayscraper/internal/metadata"
 )
 
-// This file implements Factory for Pod scraper.
+// This file implements Factory for Array scraper.
 
 const (
 	// TypeStr the value of "type" key in configuration.
-	TypeStr = "pod"
+	TypeStr = "array"
 )
 
 // Factory is the Factory for scraper.
@@ -49,7 +49,7 @@ func (f *Factory) CreateMetricsScraper(
 	config internal.Config,
 ) (scraperhelper.Scraper, error) {
 	cfg := config.(*Config)
-	s, err := newPodScraper(ctx, settings, cfg)
+	s, err := newArrayScraper(ctx, settings, cfg)
 	if err != nil {
 		return nil, err
 	}

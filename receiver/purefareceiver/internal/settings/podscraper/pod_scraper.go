@@ -13,233 +13,149 @@
 // limitations under the License.
 
 package podscraper // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/podscraper"
-
 import (
 	"context"
-	"fmt"
+	"strconv"
 	"time"
 
-	"github.com/shirou/gopsutil/v3/host"
-	"github.com/shirou/gopsutil/v3/net"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
-	"go.opentelemetry.io/collector/receiver/scrapererror"
+	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/internal/coreinternal/processor/filterset"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/scraper/podscraper/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/arrayscraper/internal/metadata"
 )
 
 const (
-	podMetricsLen         = 4
-	connectionsMetricsLen = 1
+	emitMetricsWithDimensionAttributeFeatureGateID    = "receiver.purefa.emitMetricsWithDimensionAttribute"
+	emitMetricsWithoutDimensionAttributeFeatureGateID = "receiver.purefa.emitMetricsWithoutDimensionAttribute"
 )
 
-// scraper for Pod Metrics
-type scraper struct {
-	settings  component.ReceiverCreateSettings
-	config    *Config
-	mb        *metadata.MetricsBuilder
-	startTime pcommon.Timestamp
-	includeFS filterset.FilterSet
-	excludeFS filterset.FilterSet
+var (
+	emitMetricsWithDimensionAttributeFeatureGate = featuregate.Gate{
+		ID:      emitMetricsWithDimensionAttributeFeatureGateID,
+		Enabled: true,
+		Description: "Some Pure FlashArray metrics reported are transitioning from being reported with a dimension " +
+			"attribute to being reported with the dimension included in the metric name to adhere to the " +
+			"OpenTelemetry specification. This feature gate controls emitting the old metrics with the dimension " +
+			"attribute.",
+	}
 
-	// for mocking
-	bootTime                             func() (uint64, error)
-	ioCounters                           func(bool) ([]net.IOCountersStat, error)
-	connections                          func(string) ([]net.ConnectionStat, error)
-	conntrack                            func() ([]net.FilterStat, error)
-	emitMetricsWithDirectionAttribute    bool
-	emitMetricsWithoutDirectionAttribute bool
+	emitMetricsWithoutDimensionAttributeFeatureGate = featuregate.Gate{
+		ID:      emitMetricsWithoutDimensionAttributeFeatureGateID,
+		Enabled: false,
+		Description: "Some Pure FlashArray metrics reported are transitioning from being reported with a dimension " +
+			"attribute to being reported with the dimension included in the metric name to adhere to the " +
+			"OpenTelemetry specification. This feature gate controls emitting the new metrics without the dimension " +
+			"attribute.",
+	}
+)
+
+func init() {
+	featuregate.GetRegistry().MustRegister(emitMetricsWithDimensionAttributeFeatureGate)
+	featuregate.GetRegistry().MustRegister(emitMetricsWithoutDimensionAttributeFeatureGate)
 }
 
-// newPodScraper creates a set of Pod related metrics
-func newPodScraper(_ context.Context, settings component.ReceiverCreateSettings, cfg *Config) (*scraper, error) {
-	scraper := &scraper{
-		settings:                             settings,
-		config:                               cfg,
-		bootTime:                             host.BootTime,
-		ioCounters:                           net.IOCounters,
-		connections:                          net.Connections,
-		conntrack:                            net.FilterCounters,
-		emitMetricsWithDirectionAttribute:    featuregate.GetRegistry().IsEnabled(internal.EmitMetricsWithDirectionAttributeFeatureGateID),
-		emitMetricsWithoutDirectionAttribute: featuregate.GetRegistry().IsEnabled(internal.EmitMetricsWithoutDirectionAttributeFeatureGateID),
-	}
-
-	var err error
-
-	if len(cfg.Include.Interfaces) > 0 {
-		scraper.includeFS, err = filterset.CreateFilterSet(cfg.Include.Interfaces, &cfg.Include.Config)
-		if err != nil {
-			return nil, fmt.Errorf("error creating pod interface include filters: %w", err)
-		}
-	}
-
-	if len(cfg.Exclude.Interfaces) > 0 {
-		scraper.excludeFS, err = filterset.CreateFilterSet(cfg.Exclude.Interfaces, &cfg.Exclude.Config)
-		if err != nil {
-			return nil, fmt.Errorf("error creating pod interface exclude filters: %w", err)
-		}
-	}
-
-	return scraper, nil
+type purefaScraper struct {
+	logger                               *zap.Logger
+	config                               *Config
+	mb                                   *metadata.MetricsBuilder
+	newClient                            newPurefaClientFunc
+	emitMetricsWithDimensionAttribute    bool
+	emitMetricsWithoutDimensionAttribute bool
 }
 
-func (s *scraper) start(context.Context, component.Host) error {
-	bootTime, err := s.bootTime()
-	if err != nil {
-		return err
+func newPurefaScraper(
+	settings component.ReceiverCreateSettings,
+	config *Config,
+) purefaScraper {
+	return purefaScraper{
+		logger:                               settings.Logger,
+		config:                               config,
+		newClient:                            newPurefaClient,
+		mb:                                   metadata.NewMetricsBuilder(config.Metrics, settings.BuildInfo),
+		emitMetricsWithDimensionAttribute:    featuregate.GetRegistry().IsEnabled(emitMetricsWithDimensionAttributeFeatureGateID),
+		emitMetricsWithoutDimensionAttribute: featuregate.GetRegistry().IsEnabled(emitMetricsWithoutDimensionAttributeFeatureGateID),
 	}
-
-	s.startTime = pcommon.Timestamp(bootTime * 1e9)
-	s.mb = metadata.NewMetricsBuilder(s.config.Metrics, s.settings.BuildInfo, metadata.WithStartTime(pcommon.Timestamp(bootTime*1e9)))
-	return nil
 }
 
-func (s *scraper) scrape(_ context.Context) (pmetric.Metrics, error) {
-	var errors scrapererror.ScrapeErrors
-
-	err := s.recordPodCounterMetrics()
+func (r *purefaScraper) scrape(_ context.Context) (pmetric.Metrics, error) {
+	// Init client in scrape method in case there are transient errors in the
+	// constructor.
+	statsClient, err := r.newClient(r.config.Endpoint, r.config.Timeout)
 	if err != nil {
-		errors.AddPartial(podMetricsLen, err)
+		r.logger.Error("Failed to establish client", zap.Error(err))
+		return pmetric.Metrics{}, err
 	}
 
-	err = s.recordPodConnectionsMetrics()
+	allServerStats, err := statsClient.Stats()
 	if err != nil {
-		errors.AddPartial(connectionsMetricsLen, err)
+		r.logger.Error("Failed to fetch purefa stats", zap.Error(err))
+		return pmetric.Metrics{}, err
 	}
 
-	err = s.recordPodConntrackMetrics()
-	if err != nil {
-		errors.AddPartial(connectionsMetricsLen, err)
-	}
-
-	return s.mb.Emit(), errors.Combine()
-}
-
-func (s *scraper) recordPodCounterMetrics() error {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
-	// get total stats only
-	ioCounters, err := s.ioCounters( /*perPodInterfaceController=*/ true)
+	for _, stats := range allServerStats {
+		for k, v := range stats.Stats {
+			switch k {
+			case "pod_performance_average_bytes":
+				if parsedV, ok := r.parseInt(k, v); ok {
+					r.mb.RecordPurefaPodPerformanceAverageBytesDataPoint(now, parsedV)
+				}
+			case "pod_performance_bandwidth_bytes":
+				if parsedV, ok := r.parseInt(k, v); ok {
+					r.mb.RecordPurefaPodPerformanceBandwidthByteshDataPoint(now, parsedV)
+				}
+			case "pod_performance_latency_usec":
+				if parsedV, ok := r.parseInt(k, v); ok {
+					r.mb.RecordPurefaPodPerformanceLatencyUsecDataPoint(now, parsedV)
+				}
+			case "pod_performance_throughput_iops":
+				if parsedV, ok := r.parseInt(k, v); ok {
+					r.mb.RecordPurefaPodPerformanceThroughputIopsDataPoint(now, parsedV)
+				}
+			case "pod_space_bytes":
+				if parsedV, ok := r.parseInt(k, v); ok {
+					r.mb.RecordPurefaPodSpaceBytesDataPoint(now, parsedV)
+				}
+			case "pod_space_data_reduction_ratio":
+				if parsedV, ok := r.parseInt(k, v); ok {
+					r.mb.RecordPurefaPodSpaceDataReductionRatioDataPoint(now, parsedV)
+				}
+			}
+		}
+	}
+
+	return r.mb.Emit(), nil
+}
+
+// parseInt converts string to int64.
+func (r *purefaScraper) parseInt(key, value string) (int64, bool) {
+	i, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
-		return fmt.Errorf("failed to read pod IO stats: %w", err)
+		r.logInvalid("int", key, value)
+		return 0, false
 	}
-
-	// filter pod interfaces by name
-	ioCounters = s.filterByInterface(ioCounters)
-
-	if len(ioCounters) > 0 {
-		s.recordPodPacketsMetric(now, ioCounters)
-		s.recordPodDroppedPacketsMetric(now, ioCounters)
-		s.recordPodErrorPacketsMetric(now, ioCounters)
-		s.recordPodIOMetric(now, ioCounters)
-	}
-
-	return nil
+	return i, true
 }
 
-func (s *scraper) recordPodPacketsMetric(now pcommon.Timestamp, ioCountersSlice []net.IOCountersStat) {
-	for _, ioCounters := range ioCountersSlice {
-		if s.emitMetricsWithoutDirectionAttribute {
-			s.mb.RecordSystemPodPacketsTransmitDataPoint(now, int64(ioCounters.PacketsSent), ioCounters.Name)
-			s.mb.RecordSystemPodPacketsReceiveDataPoint(now, int64(ioCounters.PacketsRecv), ioCounters.Name)
-		}
-		if s.emitMetricsWithDirectionAttribute {
-			s.mb.RecordSystemPodPacketsDataPoint(now, int64(ioCounters.PacketsSent), ioCounters.Name, metadata.AttributeDirectionTransmit)
-			s.mb.RecordSystemPodPacketsDataPoint(now, int64(ioCounters.PacketsRecv), ioCounters.Name, metadata.AttributeDirectionReceive)
-		}
-	}
-}
-
-func (s *scraper) recordPodDroppedPacketsMetric(now pcommon.Timestamp, ioCountersSlice []net.IOCountersStat) {
-	for _, ioCounters := range ioCountersSlice {
-		if s.emitMetricsWithoutDirectionAttribute {
-			s.mb.RecordSystemPodDroppedTransmitDataPoint(now, int64(ioCounters.Dropout), ioCounters.Name)
-			s.mb.RecordSystemPodDroppedReceiveDataPoint(now, int64(ioCounters.Dropin), ioCounters.Name)
-		}
-		if s.emitMetricsWithDirectionAttribute {
-			s.mb.RecordSystemPodDroppedDataPoint(now, int64(ioCounters.Dropout), ioCounters.Name, metadata.AttributeDirectionTransmit)
-			s.mb.RecordSystemPodDroppedDataPoint(now, int64(ioCounters.Dropin), ioCounters.Name, metadata.AttributeDirectionReceive)
-		}
-	}
-}
-
-func (s *scraper) recordPodErrorPacketsMetric(now pcommon.Timestamp, ioCountersSlice []net.IOCountersStat) {
-	for _, ioCounters := range ioCountersSlice {
-		if s.emitMetricsWithoutDirectionAttribute {
-			s.mb.RecordSystemPodErrorsTransmitDataPoint(now, int64(ioCounters.Errout), ioCounters.Name)
-			s.mb.RecordSystemPodErrorsReceiveDataPoint(now, int64(ioCounters.Errin), ioCounters.Name)
-		}
-		if s.emitMetricsWithDirectionAttribute {
-			s.mb.RecordSystemPodErrorsDataPoint(now, int64(ioCounters.Errout), ioCounters.Name, metadata.AttributeDirectionTransmit)
-			s.mb.RecordSystemPodErrorsDataPoint(now, int64(ioCounters.Errin), ioCounters.Name, metadata.AttributeDirectionReceive)
-		}
-	}
-}
-
-func (s *scraper) recordPodIOMetric(now pcommon.Timestamp, ioCountersSlice []net.IOCountersStat) {
-	for _, ioCounters := range ioCountersSlice {
-		if s.emitMetricsWithoutDirectionAttribute {
-			s.mb.RecordSystemPodIoTransmitDataPoint(now, int64(ioCounters.BytesSent), ioCounters.Name)
-			s.mb.RecordSystemPodIoReceiveDataPoint(now, int64(ioCounters.BytesRecv), ioCounters.Name)
-		}
-		if s.emitMetricsWithDirectionAttribute {
-			s.mb.RecordSystemPodIoDataPoint(now, int64(ioCounters.BytesSent), ioCounters.Name, metadata.AttributeDirectionTransmit)
-			s.mb.RecordSystemPodIoDataPoint(now, int64(ioCounters.BytesRecv), ioCounters.Name, metadata.AttributeDirectionReceive)
-		}
-	}
-}
-
-func (s *scraper) recordPodConnectionsMetrics() error {
-	now := pcommon.NewTimestampFromTime(time.Now())
-
-	connections, err := s.connections("tcp")
+// parseFloat converts string to float64.
+func (r *purefaScraper) parseFloat(key, value string) (float64, bool) {
+	i, err := strconv.ParseFloat(value, 64)
 	if err != nil {
-		return fmt.Errorf("failed to read TCP connections: %w", err)
+		r.logInvalid("float", key, value)
+		return 0, false
 	}
-
-	tcpConnectionStatusCounts := getTCPConnectionStatusCounts(connections)
-
-	s.recordPodConnectionsMetric(now, tcpConnectionStatusCounts)
-	return nil
+	return i, true
 }
 
-func getTCPConnectionStatusCounts(connections []net.ConnectionStat) map[string]int64 {
-	tcpStatuses := make(map[string]int64, len(allTCPStates))
-	for _, state := range allTCPStates {
-		tcpStatuses[state] = 0
-	}
-
-	for _, connection := range connections {
-		tcpStatuses[connection.Status]++
-	}
-	return tcpStatuses
-}
-
-func (s *scraper) recordPodConnectionsMetric(now pcommon.Timestamp, connectionStateCounts map[string]int64) {
-	for connectionState, count := range connectionStateCounts {
-		s.mb.RecordSystemPodConnectionsDataPoint(now, count, metadata.AttributeProtocolTcp, connectionState)
-	}
-}
-
-func (s *scraper) filterByInterface(ioCounters []net.IOCountersStat) []net.IOCountersStat {
-	if s.includeFS == nil && s.excludeFS == nil {
-		return ioCounters
-	}
-
-	filteredIOCounters := make([]net.IOCountersStat, 0, len(ioCounters))
-	for _, io := range ioCounters {
-		if s.includeInterface(io.Name) {
-			filteredIOCounters = append(filteredIOCounters, io)
-		}
-	}
-	return filteredIOCounters
-}
-
-func (s *scraper) includeInterface(interfaceName string) bool {
-	return (s.includeFS == nil || s.includeFS.Matches(interfaceName)) &&
-		(s.excludeFS == nil || !s.excludeFS.Matches(interfaceName))
+func (r *purefaScraper) logInvalid(expectedType, key, value string) {
+	r.logger.Info(
+		"invalid value",
+		zap.String("expectedType", expectedType),
+		zap.String("key", key),
+		zap.String("value", value),
+	)
 }

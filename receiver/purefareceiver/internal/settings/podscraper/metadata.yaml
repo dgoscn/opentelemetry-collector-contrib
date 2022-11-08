@@ -25,7 +25,7 @@ attributes:
 metrics:
 # HELP purefa_pod_performance_average_bytes 
 # TYPE purefa_pod_performance_average_bytes gauge
-purefa_pod_performance_average_bytes:
+purefa.pod.performance.average.bytes:
     enabled:
     description: FlashArray pod average operations size
     unit: byte
@@ -37,7 +37,7 @@ purefa_pod_performance_average_bytes:
 
 # HELP purefa_pod_performance_bandwidth_bytes 
 # TYPE purefa_pod_performance_bandwidth_bytes gauge
-purefa_pod_performance_bandwidth_bytes:
+purefa.pod.performance.bandwidth.bytes:
     enabled:
     description: FlashArray pod throughput
     unit: byte
@@ -49,7 +49,7 @@ purefa_pod_performance_bandwidth_bytes:
 
 # HELP purefa_pod_performance_latency_usec 
 # TYPE purefa_pod_performance_latency_usec gauge
-purefa_pod_performance_latency_usec:
+purefa.pod.performance.latency.usec:
     enabled:
     description: FlashArray pod latency
     unit: microsecond
@@ -61,7 +61,7 @@ purefa_pod_performance_latency_usec:
 
 # HELP purefa_pod_performance_throughput_iops 
 # TYPE purefa_pod_performance_throughput_iops gauge
-purefa_pod_performance_throughput_iops:
+purefa.pod.performance.throughput.iops:
     enabled:
     description: FlashArray pod throughput
     unit: operation
@@ -73,7 +73,7 @@ purefa_pod_performance_throughput_iops:
 
 # HELP purefa_pod_space_bytes 
 # TYPE purefa_pod_space_bytes gauge
-purefa_pod_space_bytes:
+purefa.pod.space.bytes:
     enabled:
     description: FlashArray pod space in bytes
     unit: byte
@@ -85,7 +85,7 @@ purefa_pod_space_bytes:
 
 # HELP purefa_pod_space_data_reduction_ratio 
 # TYPE purefa_pod_space_data_reduction_ratio gauge
-purefa_pod_space_data_reduction_ratio:
+purefa.pod.space.data.reduction.ratio:
     enabled:
     description: FlashArray pod space data reduction
     unit:

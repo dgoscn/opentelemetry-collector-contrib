@@ -1,4 +1,4 @@
-name: purefareceiver/volume
+.name: purefareceiver/volume
 
 # Optional: OTel Semantic Conventions version that will be associated with the scraped metrics.
 # This attribute should be set for metrics compliant with OTel Semantic Conventions.
@@ -34,7 +34,7 @@ attributes:
 metrics:
 # HELP purefa_volume_performance_average_bytes 
 # TYPE purefa_volume_performance_average_bytes gauge
-purefa_volume_performance_average_bytes:
+purefa.volume.performance.average.bytes:
     enabled:
     description: FlashArray volume average operations size
     unit: byte
@@ -46,7 +46,7 @@ purefa_volume_performance_average_bytes:
 
 # HELP purefa_volume_performance_bandwidth_bytes 
 # TYPE purefa_volume_performance_bandwidth_bytes gauge
-purefa_volume_performance_bandwidth_bytes:
+purefa.volume.performance.bandwidth.bytes:
     enabled:
     description: FlashArray volume throughput
     unit: byte
@@ -58,7 +58,7 @@ purefa_volume_performance_bandwidth_bytes:
 
 # HELP purefa_volume_performance_latency_usec 
 # TYPE purefa_volume_performance_latency_usec gauge
-purefa_volume_performance_latency_usec:
+purefa.volume.performance.latency.usec:
     enabled:
     description: FlashArray volume latency
     unit: microsecond
@@ -70,7 +70,7 @@ purefa_volume_performance_latency_usec:
 
 # HELP purefa_volume_performance_throughput_iops 
 # TYPE purefa_volume_performance_throughput_iops gauge
-purefa_volume_performance_throughput_iops:
+purefa.volume.performance.throughput.iops:
     enabled:
     description: FlashArray volume throughput
     unit: operation
@@ -82,7 +82,7 @@ purefa_volume_performance_throughput_iops:
 
 # HELP purefa_volume_space_bytes 
 # TYPE purefa_volume_space_bytes gauge
-purefa_volume_space_bytes:
+purefa.volume.space.bytes:
     enabled:
     description: FlashArray volume space in bytes
     unit: byte
@@ -94,7 +94,7 @@ purefa_volume_space_bytes:
 
 # HELP purefa_volume_space_data_reduction_ratio 
 # TYPE purefa_volume_space_data_reduction_ratio gauge
-purefa_volume_space_data_reduction_ratio:
+purefa.volume.space.data.reduction.ratio:
     enabled:
     description: FlashArray volume space data reduction
     unit:

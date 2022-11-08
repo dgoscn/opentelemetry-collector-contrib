@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package volumescraper // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/volumescraper"
+package directoriescraper // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/directoriescraper"
 
 import (
 	"context"
@@ -25,7 +25,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/arrayscraper/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/purefareceiver/internal/settings/directoriescraper/internal/metadata"
 )
 
 const (
@@ -101,29 +101,29 @@ func (r *purefaScraper) scrape(_ context.Context) (pmetric.Metrics, error) {
 	for _, stats := range allServerStats {
 		for k, v := range stats.Stats {
 			switch k {
-			case "volume_performance_average_bytes":
+			case "directory_performance_average_bytes":
 				if parsedV, ok := r.parseInt(k, v); ok {
-					r.mb.RecordPurefaVolumePerformanceAverageBytesDataPoint(now, parsedV)
+					r.mb.RecordPurefaDirectoryPerformanceAverageBytesDataPoint(now, parsedV)
 				}
-			case "volume_performance_bandwidth_bytes":
+			case "directory_performance_bandwidth_bytes":
 				if parsedV, ok := r.parseInt(k, v); ok {
-					r.mb.RecordPurefaVolumePerformanceBandwidthByteshDataPoint(now, parsedV)
+					r.mb.RecordPurefaDirectoryPerformanceBandwidthByteshDataPoint(now, parsedV)
 				}
-			case "volume_performance_latency_usec":
+			case "directory_performance_latency_usec":
 				if parsedV, ok := r.parseInt(k, v); ok {
-					r.mb.RecordPurefaVolumePerformanceLatencyUsecDataPoint(now, parsedV)
+					r.mb.RecordPurefaDirectoryPerformanceLatencyUsecDataPoint(now, parsedV)
 				}
-			case "volume_performance_throughput_iops":
+			case "directory_performance_throughput_iops":
 				if parsedV, ok := r.parseInt(k, v); ok {
-					r.mb.RecordPurefaVolumePerformanceThroughputIopsDataPoint(now, parsedV)
+					r.mb.RecordPurefaDirectoryPerformanceThroughputIopsDataPoint(now, parsedV)
 				}
-			case "volume_space_bytes":
+			case "directory_space_bytes":
 				if parsedV, ok := r.parseInt(k, v); ok {
-					r.mb.RecordPurefaVolumeSpaceBytesDataPoint(now, parsedV)
+					r.mb.RecordPurefaDirectorySpaceBytesDataPoint(now, parsedV)
 				}
-			case "volume_space_data_reduction_ratio":
+			case "directory_space_data_reduction_ratio":
 				if parsedV, ok := r.parseInt(k, v); ok {
-					r.mb.RecordPurefaVolumeSpaceDataReductionRatioDataPoint(now, parsedV)
+					r.mb.RecordPurefaDirectorySpaceDataReductionRatioDataPoint(now, parsedV)
 				}
 			}
 		}

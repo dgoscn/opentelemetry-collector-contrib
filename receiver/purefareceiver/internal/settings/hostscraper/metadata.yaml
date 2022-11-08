@@ -1,4 +1,4 @@
-name: purefareceiver/host
+.name: purefareceiver/host
 
 # Optional: OTel Semantic Conventions version that will be associated with the scraped metrics.
 # This attribute should be set for metrics compliant with OTel Semantic Conventions.
@@ -28,7 +28,7 @@ attributes:
 metrics:
 # HELP purefa_host_connections_info 
 # TYPE purefa_host_connections_info gauge
-purefa_host_connections_info:
+purefa.host.connections.info:
     enabled:
     description: FlashArray host volumes connections
     unit:
@@ -40,7 +40,7 @@ purefa_host_connections_info:
 
 # HELP purefa_host_performance_average_bytes 
 # TYPE purefa_host_performance_average_bytes gauge
-purefa_host_performance_average_bytes:
+purefa.host.performance.average.bytes:
     enabled:
     description: FlashArray host average operations size
     unit: byte
@@ -52,7 +52,7 @@ purefa_host_performance_average_bytes:
 
 # HELP purefa_host_performance_bandwidth_bytes 
 # TYPE purefa_host_performance_bandwidth_bytes gauge
-purefa_host_performance_bandwidth_bytes:
+purefa.host.performance.bandwidth.bytes:
     enabled:
     description: FlashArray host throughput
     unit: byte
@@ -64,7 +64,7 @@ purefa_host_performance_bandwidth_bytes:
 
 # HELP purefa_host_performance_latency_usec 
 # TYPE purefa_host_performance_latency_usec gauge
-purefa_host_performance_latency_usec:
+purefa.host.performance.latency.usec:
     enabled:
     description: FlashArray host latency
     unit: microsecond
@@ -76,7 +76,7 @@ purefa_host_performance_latency_usec:
 
 # HELP purefa_host_performance_throughput_iops 
 # TYPE purefa_host_performance_throughput_iops gauge
-purefa_host_performance_throughput_iops:
+purefa.host.performance.throughput.iops:
     enabled:
     description:
     unit: operation
@@ -88,7 +88,7 @@ purefa_host_performance_throughput_iops:
 
 # HELP purefa_host_space_bytes 
 # TYPE purefa_host_space_bytes gauge
-purefa_host_space_bytes:
+purefa.host.space.bytes:
     enabled:
     description: FlashArray host space in bytes
     unit: byte
@@ -100,7 +100,7 @@ purefa_host_space_bytes:
 
 # HELP purefa_host_space_data_reduction_ratio 
 # TYPE purefa_host_space_data_reduction_ratio gauge
-purefa_host_space_data_reduction_ratio:
+purefa.host.space.data.reduction.ratio:
     enabled:
     description: FlashArray host space data reduction
     unit:

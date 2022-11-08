@@ -1,0 +1,3 @@
+purefa:
+  endpoint: "localhost:13131"
+  collection_interval: 120s

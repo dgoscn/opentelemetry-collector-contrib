@@ -22,7 +22,7 @@ attributes:
 metrics:
 # HELP purefa_directory_performance_average_bytes 
 # TYPE purefa_directory_performance_average_bytes gauge
-purefa_directory_performance_average_bytes:
+purefa.directory.performance.average.bytes:
     enabled:
     description: FlashArray directory average operations size
     unit:
@@ -34,7 +34,7 @@ purefa_directory_performance_average_bytes:
 
 # HELP purefa_directory_performance_bandwidth_bytes 
 # TYPE purefa_directory_performance_bandwidth_bytes gauge
-purefa_directory_performance_bandwidth_bytes:
+purefa.directory.performance.bandwidth.bytes:
     enabled:
     description: FlashArray directory throughput
     unit: byte
@@ -46,7 +46,7 @@ purefa_directory_performance_bandwidth_bytes:
 
 # HELP purefa_directory_performance_latency_usec 
 # TYPE purefa_directory_performance_latency_usec gauge
-purefa_directory_performance_latency_usec:
+purefa.directory.performance.latency.usec:
     enabled:
     description: FlashArray directory latency
     unit: microsecond
@@ -58,7 +58,7 @@ purefa_directory_performance_latency_usec:
 
 # HELP purefa_directory_performance_throughput_iops 
 # TYPE purefa_directory_performance_throughput_iops gauge
-purefa_directory_performance_throughput_iops:
+purefa.directory.performance.throughput.iops:
     enabled:
     description: FlashArray directory throughput
     unit: operation
@@ -70,7 +70,7 @@ purefa_directory_performance_throughput_iops:
 
 # HELP purefa_directory_space_bytes 
 # TYPE purefa_directory_space_bytes gauge
-purefa_directory_space_bytes:
+purefa.directory.space.bytes:
     enabled:
     description: FlashArray directory space in bytes
     unit: byte
@@ -82,7 +82,7 @@ purefa_directory_space_bytes:
 
 # HELP purefa_directory_space_data_reduction_ratio 
 # TYPE purefa_directory_space_data_reduction_ratio gauge
-purefa_directory_space_data_reduction_ratio:
+purefa.directory.space.data.reduction.ratio:
     enabled:
     description: FlashArray directory space data reduction
     unit:
