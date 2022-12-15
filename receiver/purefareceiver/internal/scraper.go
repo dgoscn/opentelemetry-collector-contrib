@@ -47,6 +47,7 @@ type scraper struct {
 	endpoint       string
 	configs        []ScraperConfig
 	scrapeInterval time.Duration
+	labels         model.LabelSet
 }
 
 func NewScraper(ctx context.Context,
@@ -54,12 +55,14 @@ func NewScraper(ctx context.Context,
 	endpoint string,
 	configs []ScraperConfig,
 	scrapeInterval time.Duration,
+	labels model.LabelSet,
 ) Scraper {
 	return &scraper{
 		scraperType:    scraperType,
 		endpoint:       endpoint,
 		configs:        configs,
 		scrapeInterval: scrapeInterval,
+		labels:         labels,
 	}
 }
 
@@ -90,6 +93,7 @@ func (h *scraper) ToPrometheusReceiverConfig(host component.Host, fact receiver.
 			MetricsPath:      fmt.Sprintf("/metrics/%s", h.scraperType),
 			Params: url.Values{
 				"endpoint": {arr.Address},
+				//"env":      {arr.Env},
 			},
 
 			ServiceDiscoveryConfigs: discovery.Configs{
@@ -98,6 +102,7 @@ func (h *scraper) ToPrometheusReceiverConfig(host component.Host, fact receiver.
 						Targets: []model.LabelSet{
 							{model.AddressLabel: model.LabelValue(u.Host)},
 						},
+						Labels: h.labels,
 					},
 				},
 			},

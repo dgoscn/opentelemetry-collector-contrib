@@ -57,7 +57,7 @@ func TestToPrometheusConfig(t *testing.T) {
 		},
 	}
 
-	scraper := NewScraper(context.Background(), "hosts", endpoint, cfgs, interval)
+	scraper := NewScraper(context.Background(), "hosts", endpoint, cfgs, interval, model.LabelSet{})
 
 	// test
 	scCfgs, err := scraper.ToPrometheusReceiverConfig(host, prFactory)

@@ -26,6 +26,7 @@ receivers:
   purefa:
     endpoint: http://172.0.0.1:9490/metrics
     arrays:
+    env: dev
     - address: gse-array01
       auth:
         authenticator: bearertokenauth/array01
